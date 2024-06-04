@@ -1,0 +1,54 @@
+
+# Segurança
+security:
+  jwt:
+    token:
+      secret-key: 53c37
+      expire-length: 360000
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_capzip?useTimezone=true&serverTimezone=UTC
+    username: postgres
+    password: adminpass
+
+  # JPA
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update # choose an appropriate value
+    show-sql: false
+
+  # Email
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: carlosmiguel.dsa12@gmail.com
+    password: ${sua_password} #htpps://myaccount.google.com/apppasswords
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    test-connection: true
+
+
+# Configura��o do Springdoc OpenAPI
+springdoc:
+  swagger-ui:
+    use-root-path: true
+  packagesToScan: io.github.karMiguel.capzip.controllers
+
+
+# CORS
+cors:
+  originPatterns:
+    - "http://localhost:3000"
+    - "http://localhost:8080"
+    - "http://localhost:4200"
+
+# Servidor
+server:
+  port: 8090
