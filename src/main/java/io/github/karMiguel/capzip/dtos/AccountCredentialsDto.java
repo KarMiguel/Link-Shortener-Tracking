@@ -21,7 +21,6 @@ public class AccountCredentialsDto {
     private String email;
 
     @NotBlank
-    @Size(min = 6,max = 6)
     private String password;
 
 
