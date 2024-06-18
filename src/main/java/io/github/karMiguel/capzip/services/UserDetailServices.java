@@ -1,10 +1,10 @@
 package io.github.karMiguel.capzip.services;
 
 
-import io.github.karMiguel.capzip.model.User;
+import io.github.karMiguel.capzip.model.Users;
 import io.github.karMiguel.capzip.repository.UserRepository;
+import io.github.karMiguel.capzip.security.JwtUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,11 +27,11 @@ public class UserDetailServices implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("Finding one user by name "+username+"!");
 
-        User user = repository.findByEmail(username).orElseThrow(
+        Users user = repository.findByEmail(username).orElseThrow(
                 ()-> new UsernameNotFoundException("Username not found!")
         );
         if (user != null){
-            return  user;
+            return new JwtUserDetails(user);
         }else{
             throw new UsernameNotFoundException("Username "+username+" not found!");
         }

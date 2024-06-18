@@ -70,8 +70,7 @@ public class JwtTokenProvider {
                 .withExpiresAt(validity)
                 .withSubject(username)
                 .withIssuer(issuerUrl)
-                .sign(algorithm)
-                .strip();
+                .sign(algorithm);
     }
 
     private String getRefreshToken(String username, Role roles, Date now) {

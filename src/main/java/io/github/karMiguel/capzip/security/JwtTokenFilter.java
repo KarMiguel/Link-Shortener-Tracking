@@ -14,7 +14,6 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 
 
-@NoArgsConstructor
 @AllArgsConstructor
 public class JwtTokenFilter extends GenericFilterBean {
 

@@ -5,6 +5,7 @@ import io.github.karMiguel.capzip.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -52,14 +53,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                     authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(
-								antMatcher("/api/user/v1/**"),
+								antMatcher("/api/v1/user/**"),
 							antMatcher("/auth/signin"),
 							antMatcher("/auth/refresh/**"),
                     		antMatcher("/swagger-ui/**"),
                     		antMatcher("/v3/api-docs/**"),
-								antMatcher("/api/news/top-headlines")
+								antMatcher("/api/news/top-headlines"),
+								antMatcher("/api/v1/link")
                 		).permitAll()
-                        .requestMatchers("/api/**").authenticated()
+							//.requestMatchers("/api/**").authenticated()
+							//.requestMatchers("/api/v1/link/**").permitAll()
+							.requestMatchers("/greet/**").permitAll()
+							.requestMatchers(HttpMethod.GET,"/**").permitAll()
+							.requestMatchers(HttpMethod.DELETE).authenticated()
+							.requestMatchers("/api/**").authenticated()
                         .requestMatchers("/users").denyAll()
                 )
             .cors(cors -> {})
