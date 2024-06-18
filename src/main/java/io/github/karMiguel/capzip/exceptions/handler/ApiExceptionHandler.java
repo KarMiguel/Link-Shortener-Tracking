@@ -1,7 +1,7 @@
 package io.github.karMiguel.capzip.exceptions.handler;
 
-
 import io.github.karMiguel.capzip.exceptions.EntityNotFoundException;
+import io.github.karMiguel.capzip.exceptions.InvalidJwtAuthenticationException;
 import io.github.karMiguel.capzip.exceptions.UsernameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -23,34 +23,48 @@ public class ApiExceptionHandler {
     public ResponseEntity<ErrorMessage> accessDeniedException(
             AccessDeniedException ex,
             HttpServletRequest request
-    ){
-        log.error("Api Error - ",ex);
+    ) {
+        log.error("Acesso negado - {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request,HttpStatus.FORBIDDEN, ex.getMessage()));
+                .body(new ErrorMessage(request, HttpStatus.FORBIDDEN,  ex.getMessage()));
     }
+
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorMessage> entityUserNotFoundException(
-            RuntimeException ex,
+    public ResponseEntity<ErrorMessage> entityNotFoundException(
+            EntityNotFoundException ex,
             HttpServletRequest request
-    ){
-        log.error("Api Error - ",ex);
+    ) {
+        log.error("Entidade não encontrada - {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request,HttpStatus.NOT_FOUND, ex.getMessage()));
+                .body(new ErrorMessage(request, HttpStatus.NOT_FOUND,  ex.getMessage()));
     }
-    @ExceptionHandler({UsernameUniqueViolationException.class})
-    public ResponseEntity<ErrorMessage> uniqueViolationException(
-            RuntimeException ex,
+
+    @ExceptionHandler(UsernameUniqueViolationException.class)
+    public ResponseEntity<ErrorMessage> usernameUniqueViolationException(
+            UsernameUniqueViolationException ex,
             HttpServletRequest request
-    ){
-        log.error("Api Error - ",ex);
+    ) {
+        log.error("Violacao de nome de usuário único - {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request,HttpStatus.CONFLICT, ex.getMessage()));
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, "Nome de usuário já existente."));
+    }
+
+    @ExceptionHandler(InvalidJwtAuthenticationException.class)
+    public ResponseEntity<ErrorMessage> invalidJwtAuthenticationException(
+            InvalidJwtAuthenticationException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Autenticação JWT inválida - {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.UNAUTHORIZED, ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -58,29 +72,24 @@ public class ApiExceptionHandler {
             MethodArgumentNotValidException ex,
             HttpServletRequest request,
             BindingResult result
-    ){
-        log.error("Api Error - ",ex);
+    ) {
+        log.error("Argumento inválido - {}", ex.getMessage());
 
         return ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request,HttpStatus.UNPROCESSABLE_ENTITY,"Campo(s) inválido(s).",result));
+                .body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY,  ex.getMessage(), result));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> internalServerErrorException(
+    public ResponseEntity<ErrorMessage> genericExceptionHandler(
             Exception ex,
             HttpServletRequest request
-    ){
-        ErrorMessage error = new ErrorMessage(
-                request,HttpStatus.INTERNAL_SERVER_ERROR,HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()
-        );
-        log.error("Internal Servle Error {} {} - ",error,ex.getMessage());
-
+    ) {
+        log.error("Erro interno do servidor - {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(error);
+                .body(new ErrorMessage(request, HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno do servidor."));
     }
-
 }

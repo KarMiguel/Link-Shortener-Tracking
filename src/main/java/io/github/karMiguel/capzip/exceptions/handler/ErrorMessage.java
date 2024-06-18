@@ -1,7 +1,5 @@
 package io.github.karMiguel.capzip.exceptions.handler;
 
-
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
@@ -22,6 +20,7 @@ public class ErrorMessage {
     private int status;
     private String statusText;
     private String message;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, String> errors;
 
@@ -51,5 +50,4 @@ public class ErrorMessage {
             this.errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
     }
-
 }
