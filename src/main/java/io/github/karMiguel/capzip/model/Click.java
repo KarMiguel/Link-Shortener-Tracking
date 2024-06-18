@@ -1,5 +1,6 @@
 package io.github.karMiguel.capzip.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import lombok.*;
@@ -15,12 +16,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-
 public class Click implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -32,24 +31,18 @@ public class Click implements Serializable {
     @Column(nullable = false)
     private String localization;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "link_short_id", insertable = false,  updatable = false)
-    private LinkShort linkShortId;
-
     @CreatedDate
-    @Column(name = "date_created")
+    @Column(name = "date_created", nullable = false, updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateCreated;
 
-    @LastModifiedDate
-    @Column(name = "date_modification")
-    private  LocalDateTime dateModification;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "link_short_id", referencedColumnName = "id")
+    private LinkShort linkShort;
 
-    @CreatedBy
-    @Column(name = "created_by")
-    private String createdBy;
-
-    @LastModifiedBy
-    @Column(name = "modified_by")
-    private  String modifiedBy;
+    @PrePersist
+    public void prePersist() {
+        this.dateCreated = LocalDateTime.now();
+    }
 
 }

@@ -16,20 +16,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-
 public class LinkShort implements Serializable {
 
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "short_link", nullable = false, unique = true)
     private String shortLink;
 
-    @Column(name = "link_long", nullable = false)
+    @Column(name = "link_long", nullable = false, columnDefinition = "TEXT")
     private String linkLong;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
 
     @CreatedDate
     @Column(name = "date_created")
@@ -37,7 +38,7 @@ public class LinkShort implements Serializable {
 
     @LastModifiedDate
     @Column(name = "date_modification")
-    private  LocalDateTime dateModification;
+    private LocalDateTime dateModification;
 
     @CreatedBy
     @Column(name = "created_by")
@@ -45,5 +46,5 @@ public class LinkShort implements Serializable {
 
     @LastModifiedBy
     @Column(name = "modified_by")
-    private  String modifiedBy;
+    private String modifiedBy;
 }

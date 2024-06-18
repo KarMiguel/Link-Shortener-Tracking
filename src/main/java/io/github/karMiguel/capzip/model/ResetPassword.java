@@ -31,7 +31,7 @@ public class ResetPassword {
 
     @ManyToOne
     @JoinColumn(name = "id_cliente")
-    private User user;
+    private Users user;
 
     @Column(length = 25)
     @Enumerated(EnumType.STRING)
