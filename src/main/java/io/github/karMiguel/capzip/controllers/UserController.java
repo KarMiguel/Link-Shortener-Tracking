@@ -6,7 +6,7 @@ import io.github.karMiguel.capzip.dtos.UpdatePasswordDto;
 import io.github.karMiguel.capzip.dtos.mapper.UserMapper;
 import io.github.karMiguel.capzip.exceptions.ResponseSuccess;
 import io.github.karMiguel.capzip.model.ResetPassword;
-import io.github.karMiguel.capzip.model.User;
+import io.github.karMiguel.capzip.model.Users;
 import io.github.karMiguel.capzip.model.enums.StatusResetPassword;
 import io.github.karMiguel.capzip.services.EmailServices;
 import io.github.karMiguel.capzip.services.ResetPasswordServices;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/user")
 @RestController
 @RequiredArgsConstructor
-
 public class UserController {
 
     private final UserServices userServices;
@@ -43,7 +42,7 @@ public class UserController {
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String email) throws MessagingException {
        try {
-            User user = userServices.findByEmail(email);
+            Users user = userServices.findByEmail(email);
 
             ResetPassword latestResetCode = resetPasswordService.getLatestResetCode(user);
             if (latestResetCode != null && latestResetCode.getStatus() == StatusResetPassword.SEND) {
@@ -68,13 +67,13 @@ public class UserController {
             if (!ResetPasswordUtil.validateCode(dto.getCode())) {
                 return ResponseEntity.badRequest().body(new ResponseSuccess("Código de redefinição inválido."));
             }
-            User user = userServices.findByEmail(dto.getUsername());
+            Users user = userServices.findByEmail(dto.getUsername());
 
             ResetPassword latestResetCode = resetPasswordService.getLatestResetCode(user);
             if (latestResetCode == null || !latestResetCode.getCode().equals(dto.getCode())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseSuccess("Código de redefinição fornecido é inválido ou expirado."));
             }
-            User newPassword =  userServices.updatePassword(dto);
+            Users newPassword =  userServices.updatePassword(dto);
             resetPasswordService.markCodeAsUsed(latestResetCode,newPassword.getPassword().toString());
 
             return ResponseEntity.ok(new ResponseSuccess("Senha redefinida com sucesso!"));
