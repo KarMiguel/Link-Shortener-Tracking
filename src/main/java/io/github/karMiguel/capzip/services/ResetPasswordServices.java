@@ -2,7 +2,7 @@ package io.github.karMiguel.capzip.services;
 
 
 import io.github.karMiguel.capzip.model.ResetPassword;
-import io.github.karMiguel.capzip.model.User;
+import io.github.karMiguel.capzip.model.Users;
 import io.github.karMiguel.capzip.model.enums.StatusResetPassword;
 import io.github.karMiguel.capzip.repository.ResetPasswordRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class ResetPasswordServices {
 
     private final ResetPasswordRepository resetPasswordRepository;
 
-    public void saveResetCode(User user, String code) {
+    public void saveResetCode(Users user, String code) {
         ResetPassword resetPassword = new ResetPassword();
         resetPassword.setUser(user);
         resetPassword.setStatus(StatusResetPassword.SEND);
@@ -23,7 +23,7 @@ public class ResetPasswordServices {
         resetPasswordRepository.save(resetPassword);
     }
 
-    public ResetPassword getLatestResetCode(User user) {
+    public ResetPassword getLatestResetCode(Users user) {
         return resetPasswordRepository.findTopByUserOrderByDateCreatedDesc(user);
     }
 
