@@ -20,8 +20,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 
 @EnableWebSecurity
 @Configuration
-public class SecurityConfig {
-
+	public class SecurityConfig {
 	@Autowired
 	private JwtTokenProvider tokenProvider;
 
@@ -39,39 +38,37 @@ public class SecurityConfig {
 
 
 	@Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        
-        JwtTokenFilter customFilter = new JwtTokenFilter(tokenProvider);
-        
-        //@formatter:off
-        return http
-            .httpBasic(basic -> basic.disable())
-            .csrf(csrf -> csrf.disable())
-            .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(
-            		session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(
-                    authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(
-								antMatcher("/api/v1/user/**"),
-							antMatcher("/auth/signin"),
-							antMatcher("/auth/refresh/**"),
-                    		antMatcher("/swagger-ui/**"),
-                    		antMatcher("/v3/api-docs/**"),
-								antMatcher("/api/news/top-headlines"),
-								antMatcher("/api/v1/link")
-                		).permitAll()
-							//.requestMatchers("/api/**").authenticated()
-							//.requestMatchers("/api/v1/link/**").permitAll()
-							.requestMatchers("/greet/**").permitAll()
-							.requestMatchers(HttpMethod.GET,"/**").permitAll()
-							.requestMatchers(HttpMethod.DELETE).authenticated()
-							.requestMatchers("/api/**").authenticated()
-                        .requestMatchers("/users").denyAll()
-                )
-            .cors(cors -> {})
-                .build();
-        //@formatter:on
-    }
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-}
+		JwtTokenFilter customFilter = new JwtTokenFilter(tokenProvider);
+
+		//@formatter:off
+		return http
+				.httpBasic(basic -> basic.disable())
+				.csrf(csrf -> csrf.disable())
+				.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
+				.sessionManagement(
+						session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(
+						authorizeHttpRequests -> authorizeHttpRequests
+								.requestMatchers(
+										antMatcher("/api/v1/user/**"),
+										antMatcher("/auth/signin"),
+										antMatcher("/auth/refresh/**"),
+										antMatcher("/swagger-ui/**"),
+										antMatcher("/v3/api-docs/**"),
+										antMatcher("/api/v1/total/**"),
+										antMatcher("/api/v1/link/shorten-link-no-auth")
+
+								).permitAll()
+								.requestMatchers(HttpMethod.GET,"/**").permitAll()
+								.requestMatchers("/api/v1/link/**").authenticated()
+								.requestMatchers("/api/v1/clicks/**").authenticated()
+								.requestMatchers("/users").denyAll()
+				)
+				.cors(cors -> {})
+				.build();
+		//@formatter:on
+	}
+
+	}
