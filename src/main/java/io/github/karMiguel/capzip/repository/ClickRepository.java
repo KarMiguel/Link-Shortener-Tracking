@@ -29,8 +29,8 @@ public interface ClickRepository extends JpaRepository<Click, Long> {
     List<Click> findByLinkShort(LinkShort linkShort);
     long countByLinkShort(LinkShort linkShort);
 
-    @Query("SELECT c.localization, COUNT(c) FROM Click c WHERE c.linkShort.shortLink = :shortLink AND c.linkShort.user = :user GROUP BY c.localization")
-    List<Object[]> countClicksByCity(@Param("shortLink") String shortLink, @Param("user") Users user);
+    @Query("SELECT c.localization, COUNT(c) as clickCount FROM Click c WHERE c.linkShort.shortLink = :shortLink AND c.linkShort.user = :user GROUP BY c.localization ORDER BY clickCount DESC")
+    Page<Object[]> countClicksByCity(@Param("shortLink") String shortLink, @Param("user") Users user, Pageable pageable);
 
     @Query("SELECT " +
             "CASE " +
