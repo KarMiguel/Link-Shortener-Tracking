@@ -2,28 +2,35 @@
 security:
   jwt:
     token:
-      secret-key: 53c37
+      secret-key: ${SECRET-KEY}
       expire-length: 720000
 
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/db_capzip?useTimezone=true&serverTimezone=UTC
-    username: postgres
-    password: adminpass
+#spring:
+ # datasource:
+  #  url: jdbc:postgresql://localhost:5432/db_capzip?useTimezone=true&serverTimezone=UTC
+   # username: postgres
+    #password: adminpass
+    spring:
+      datasource:
+        url: jdbc:postgresql://${PGHOST}:${PGPORT}/{PGDATABASE}
+        username: ${PGUSER}
+        password: ${PGPASSWORD}
+
 
   # JPA
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update # choose an appropriate value
+      ddl-auto: update
     show-sql: false
 
   # Email
   mail:
     host: smtp.gmail.com
     port: 587
-    username: carlosmiguel.dsa12@gmail.com
-    password: ${sua_password} #htpps://myaccount.google.com/apppasswords
+    username: ${EMAIL}
+    #password: ${sua_password} #htpps://myaccount.google.com/apppasswords
+    password : ${PASSWORDEMAIL}
 
     properties:
       mail:
@@ -52,4 +59,4 @@ cors:
 server:
   port: 8090
 
-DOMAIN_URL: http://localhost:8090
+DOMAIN_URL: ${DOMAIN_URL}

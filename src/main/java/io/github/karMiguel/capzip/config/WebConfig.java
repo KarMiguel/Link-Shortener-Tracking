@@ -17,26 +17,13 @@ public class WebConfig implements WebMvcConfigurer{
 
     private static final MediaType MEDIA_TYPE_APPLICATION_YML = MediaType.valueOf("application/x-yaml");
 
-    @Value("${cors.originPatterns:default}")
-    private String corsOriginPatterns = "";
-
-
-//    @Autowired
-  //  private LinkShortInterceptor linkShortInterceptor;
-
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        //registry.addInterceptor(linkShortInterceptor);
-    }
-   /* @Override
     public void addCorsMappings(CorsRegistry registry) {
-        var allowedOrigins = corsOriginPatterns.split(",");
         registry.addMapping("/**")
-                //.allowedMethods("GET", "POST", "PUT")
-                .allowedMethods("*")
-                .allowedOrigins(allowedOrigins)
-                .allowCredentials(true);
-    }*/
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*");
+    }
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         UrlPathHelper urlPathHelper = new UrlPathHelper();
