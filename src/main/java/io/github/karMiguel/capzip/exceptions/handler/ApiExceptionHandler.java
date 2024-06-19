@@ -2,6 +2,7 @@ package io.github.karMiguel.capzip.exceptions.handler;
 
 import io.github.karMiguel.capzip.exceptions.EntityNotFoundException;
 import io.github.karMiguel.capzip.exceptions.InvalidJwtAuthenticationException;
+import io.github.karMiguel.capzip.exceptions.UrlRedirectException;
 import io.github.karMiguel.capzip.exceptions.UsernameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,6 @@ public class ApiExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.CONFLICT, "Nome de usuário já existente."));
     }
-
     @ExceptionHandler(InvalidJwtAuthenticationException.class)
     public ResponseEntity<ErrorMessage> invalidJwtAuthenticationException(
             InvalidJwtAuthenticationException ex,
@@ -66,7 +66,16 @@ public class ApiExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.UNAUTHORIZED, ex.getMessage()));
     }
-
+    @ExceptionHandler(UrlRedirectException.class)
+    public ResponseEntity<ErrorMessage> UrlRedirectException(
+            UrlRedirectException ex,
+            HttpServletRequest request
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Url inválida!"));
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> methodArgumentNotValidException(
             MethodArgumentNotValidException ex,
