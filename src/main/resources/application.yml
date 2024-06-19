@@ -2,7 +2,7 @@
 security:
   jwt:
     token:
-      secret-key: ${SECRET-KEY}
+      secret-key: ${SECRETKEY}
       expire-length: 720000
 
 #spring:
