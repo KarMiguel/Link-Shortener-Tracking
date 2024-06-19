@@ -18,7 +18,7 @@ public class LinkShortMapper {
     public static LinkShortOutDto toResponse(LinkShort linkShort, Long qtdClick, String DOMAIN_URL) {
         ModelMapper modelMapper = new ModelMapper();
         LinkShortOutDto dto = modelMapper.map(linkShort, LinkShortOutDto.class);
-        dto.setShortLink(DOMAIN_URL + "/" + linkShort.getShortLink());
+        dto.setShortLink(DOMAIN_URL + "/" + linkShort.getShortLink()+"/");
         dto.setQtdClick(qtdClick);
         return dto;
     }
