@@ -1,10 +1,9 @@
-
 # Segurança
 security:
   jwt:
     token:
       secret-key: 53c37
-      expire-length: 360000
+      expire-length: 720000
 
 spring:
   datasource:
@@ -35,7 +34,7 @@ spring:
     test-connection: true
 
 
-# Configura��o do Springdoc OpenAPI
+# Configuracao do Springdoc OpenAPI
 springdoc:
   swagger-ui:
     use-root-path: true
@@ -48,7 +47,9 @@ cors:
     - "http://localhost:3000"
     - "http://localhost:8080"
     - "http://localhost:4200"
-
+    -
 # Servidor
 server:
   port: 8090
+
+DOMAIN_URL: http://localhost:8090
