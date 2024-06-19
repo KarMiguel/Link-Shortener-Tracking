@@ -3,7 +3,10 @@ package io.github.karMiguel.capzip.controllers;
 import io.github.karMiguel.capzip.dtos.ClickDTO;
 import io.github.karMiguel.capzip.dtos.ClicksByCityDTO;
 import io.github.karMiguel.capzip.dtos.ClicksByPeriodDTO;
+import io.github.karMiguel.capzip.dtos.TotalDto;
 import io.github.karMiguel.capzip.dtos.mapper.ClickMapper;
+import io.github.karMiguel.capzip.exceptions.InvalidJwtAuthenticationException;
+import io.github.karMiguel.capzip.exceptions.UrlRedirectException;
 import io.github.karMiguel.capzip.model.Click;
 import io.github.karMiguel.capzip.model.LinkShort;
 import io.github.karMiguel.capzip.model.Users;
@@ -38,50 +41,60 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ClickController {
 
     private final LinkShortServices linkShortService;
 
-    private final UserServices userServices;
 
     private final ClickServices clickServices;
+
     @CrossOrigin(origins = "*")
-    @GetMapping("/{shortLink}")
+    @GetMapping("/{shortLink}/")
     public void redirectToOriginalLink(@PathVariable String shortLink, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String decodedShortLink = URLDecoder.decode(shortLink, StandardCharsets.UTF_8.toString());
-
-        log.info("Decodificado shortLink: {}", decodedShortLink);
-
-        LinkShort redirect = linkShortService.findByLinkLong(decodedShortLink);
-        String ip = clickServices.getIp();
-        String localization = clickServices.getLocationFromIp(ip);
-
-        Click click = new Click();
-        click.setIp(ip);
-        click.setLocalization(localization);
-        click.setLinkShort(redirect);
-        click.setUserAgent(request.getHeader("User-Agent"));
-
-        log.info("Criando objeto ClickDTO: {}", click);
-
         try {
-            clickServices.saveClick(click);
-            log.info("Clique salvo com sucesso.");
-        } catch (Exception e) {
-            log.error("Erro ao salvar clique: ", e);
+            String decodedShortLink = URLDecoder.decode(shortLink, StandardCharsets.UTF_8.toString());
+
+            Users user = linkShortService.findUserByShortLink(decodedShortLink);
+            LinkShort redirect = linkShortService.findByLinkLong(decodedShortLink);
+
+            if (redirect == null) {
+                throw new UrlRedirectException("URL não encontrada para redirecionamento.");
+            }
+
+            if (user.getId() != 1L) {
+                Click click = new Click();
+                click.setIp(clickServices.getIp());
+                click.setLocalization(clickServices.getLocationFromIp(clickServices.getIp()));
+                click.setLinkShort(redirect);
+                click.setUserAgent(request.getHeader("User-Agent"));
+
+                log.info("Criando objeto ClickDTO: {}", click);
+
+                try {
+                    clickServices.saveClick(click);
+                    log.info("Clique salvo com sucesso.");
+                } catch (Exception e) {
+                    log.error("Erro ao salvar clique: ", e);
+                }
+            }
+            response.sendRedirect(redirect.getLinkLong());
+        } catch (UnsupportedEncodingException e) {
+            log.error("Erro ao decodificar shortLink", e);
+            throw new UrlRedirectException("Erro interno do servidor ao decodificar shortLink");
         }
-
-        response.sendRedirect(redirect.getLinkLong());
     }
-
     //clicks by short link
-    @GetMapping("api/v1/clicks")
+    @GetMapping("/api/v1/clicks/all")
     public ResponseEntity<PagedModel<EntityModel<ClickDTO>>> clicksByShortLink(
             @RequestParam String shortlink,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "12") Integer size,
-            @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+            @RequestParam(value = "direction", defaultValue = "asc") String direction,
+            @AuthenticationPrincipal JwtUserDetails userDetails) {
+
+        if (userDetails == null){
+            throw new InvalidJwtAuthenticationException("Não Autorizado!");
+        }
 
         var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "linkShort.shortLink"));
@@ -94,25 +107,54 @@ public class ClickController {
 
         return ResponseEntity.ok(pagedModel);
     }
-    @GetMapping("/clicks/city/")
-    public ResponseEntity<List<ClicksByCityDTO>> getClicksByCity(@RequestParam String shortLink, @AuthenticationPrincipal JwtUserDetails userDetails) {
-        Users user = userServices.findByEmail(userDetails.getUsername());
-        List<ClicksByCityDTO> clicksByCity = clickServices.getClicksByCity(user, shortLink);
+    @GetMapping("/api/v1/clicks/by-city")
+    public ResponseEntity<Page<ClicksByCityDTO>> getClicksByCity(
+            @RequestParam String shortLink,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "localization") String sort,
+            @RequestParam(defaultValue = "asc") String order,
+            @AuthenticationPrincipal JwtUserDetails userDetails) {
+
+        if (userDetails == null){
+            throw new InvalidJwtAuthenticationException("Não Autorizado!");
+        }
+
+        String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);
+
+        Users user = linkShortService.findUserByShortLink(extractedCode);
+
+            if (user.getId() != userDetails.getId()) {
+                throw new InvalidJwtAuthenticationException("Esse link não pertence a você.");
+            }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(order), sort));
+        Page<ClicksByCityDTO> clicksByCity = clickServices.getClicksByCity(user, shortLink, pageable);
         return ResponseEntity.ok(clicksByCity);
     }
 
-    @GetMapping("/clicks/period/")
-    public ResponseEntity<ClicksByPeriodDTO> getClicksByPeriod(@RequestParam String shortLink) {
+    @GetMapping("/api/v1/clicks/by-period")
+    public ResponseEntity<ClicksByPeriodDTO> getClicksByPeriod(
+            @RequestParam String shortLink,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
+        if (userDetails == null){
+            throw new InvalidJwtAuthenticationException("Não Autorizado!");
+        }
+
+        String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);
+        Users user = linkShortService.findUserByShortLink(extractedCode);
+        if (user.getId() != userDetails.getId()) {
+            throw new InvalidJwtAuthenticationException("Esse link não pertence a você.");
+        }
+
         ClicksByPeriodDTO clicksByPeriod = clickServices.getClicksByPeriod(shortLink);
         return ResponseEntity.ok(clicksByPeriod);
     }
 
-    @GetMapping("/clicks/count")
-    public ResponseEntity<Integer> countCLicks() {
-        return ResponseEntity.ok(clickServices.countClicks());
+    @GetMapping("/api/v1/total/clicks")
+    public ResponseEntity<TotalDto> countCLicks() {
+        int totalClicks = Math.toIntExact(clickServices.countClicks());
+        return ResponseEntity.ok(new TotalDto(totalClicks));
     }
-    @GetMapping("/greet/{name}")
-    public ResponseEntity<String> greetUser(@PathVariable String name) {
-        return ResponseEntity.ok("Olá, " + name + "!");
-    }
+
 }
