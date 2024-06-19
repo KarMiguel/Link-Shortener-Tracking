@@ -50,10 +50,6 @@ public class LinkShortServices {
         } while (linkShortRepository.findByShortLink(newShortLink) != null); // Verifica se o short link gerado já existe no banco de dados
         return newShortLink;
     }
-    public LinkShort saveLink(LinkShort linkShort , Users user) {
-        linkShort.setUser(user);
-        return linkShortRepository.save(linkShort);
-    }
     private String generateRandomString(int length) {
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
@@ -63,10 +59,12 @@ public class LinkShortServices {
         return sb.toString();
     }
 
+    public LinkShort findByShortLink(String shortLink) {
+        return linkShortRepository.findByShortLink(shortLink);
+    }
 
-    public String getShortLinkWithoutAuth(String linkLong) {
-        LinkShort linkShort = linkShortRepository.findByLinkLong(linkLong);
-        return linkShort != null ? linkShort.getShortLink() : null;
+    public Users findUserByShortLink(String shortLink) {
+        return linkShortRepository.findUserByShortLink(shortLink);
     }
     public List<LinkShortOutDto> listAllShortLinks(Users user) {
         List<LinkShort> linkShorts = linkShortRepository.findByUser(user);
@@ -79,32 +77,18 @@ public class LinkShortServices {
         return linkShortRepository.findByShortLink(shortLink);
     }
 
-    // public List<LinkShort> listAllShortLinksOrderedByClicks(User user) {
-     //   return linkShortRepository.findAllByUserOrderByClicksDesc(user);
-    //}
-
-    public boolean deleteShortLink(String shortLink) {
-        log.info("short link extraido = {}",shortLink);
-
-       // String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);
-       // log.info("code extraido = {}",extractedCode);
-
+    public boolean deleteShortLink(String shortLink, Long userId) {
         LinkShort linkShort = linkShortRepository.findByShortLink(shortLink);
-        log.info("linkShort = {}",linkShort);
-
-        if (linkShort != null) {
+        if (linkShort != null && linkShort.getUser().getId().equals(userId)) {
             linkShortRepository.delete(linkShort);
             return true;
         }
         return false;
-    }
-    public List<LinkShort> getShortLinksByIdAndLink(Users user, String shortLink) {
-        return linkShortRepository.findAllByUserAndShortLinkNot(user, shortLink);
-    }
-    public Page<LinkShortOutDto> listAllShortLinks(Users user, Pageable pageable) {
-        Page<LinkShort> linkShortPage = linkShortRepository.findAllByUser(user, pageable);
-        return linkShortPage.map(linkShort -> {
-            Long clickCount = clickRepository.countClicksByShortLink(linkShort.getShortLink());
+    }public Page<LinkShortOutDto> listAllShortLinks(Users user, Pageable pageable) {
+        Page<Object[]> linkShortPage = linkShortRepository.findAllByUserOrderedByClickCount(user, pageable);
+        return linkShortPage.map(obj -> {
+            LinkShort linkShort = (LinkShort) obj[0];
+            Long clickCount = (Long) obj[1];
             return LinkShortMapper.toResponse(linkShort, clickCount, DOMAIN_URL);
         });
     }

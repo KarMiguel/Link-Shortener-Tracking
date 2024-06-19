@@ -94,12 +94,10 @@ public class ClickServices {
         return Math.toIntExact(clickRepository.count());
     }
 
-    public List<ClicksByCityDTO> getClicksByCity(Users user, String shortLink) {
+    public Page<ClicksByCityDTO> getClicksByCity(Users user, String shortLink, Pageable pageable) {
         String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);
-        List<Object[]> results = clickRepository.countClicksByCity(extractedCode, user);
-        return results.stream()
-                .map(result -> new ClicksByCityDTO((String) result[0], (Long) result[1]))
-                .collect(Collectors.toList());
+        Page<Object[]> results = clickRepository.countClicksByCity(extractedCode, user, pageable);
+        return results.map(result -> new ClicksByCityDTO((String) result[0], (Long) result[1]));
     }
     public ClicksByPeriodDTO getClicksByPeriod(String shortLink) {
         String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);

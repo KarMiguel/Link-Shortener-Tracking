@@ -51,5 +51,9 @@ public class UserServices {
                 ()-> new UsernameNotFoundException(String.format("Email com username = '%s' não encontrado",username))
         );
     }
-
+    public Users findById(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                ()-> new UsernameNotFoundException(String.format("User não encontrado!"))
+        );
+    }
 }
