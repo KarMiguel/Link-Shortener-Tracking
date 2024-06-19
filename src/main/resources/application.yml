@@ -12,7 +12,7 @@ security:
     #password: adminpass
     spring:
       datasource:
-        url: jdbc:postgresql://${PGHOST}:${PGPORT}/{PGDATABASE}
+        url: ${DATABASE_URL}
         username: ${PGUSER}
         password: ${PGPASSWORD}
 
