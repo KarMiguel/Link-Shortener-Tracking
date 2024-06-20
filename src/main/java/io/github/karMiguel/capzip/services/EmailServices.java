@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailServices {
 
-	@Autowired
-	private JavaMailSender mailSender;
+	private final JavaMailSender mailSender;
 
 	public void enviarPedidoRedefinicaoSenha(String destino, String verificador) throws MessagingException {
 		MimeMessage message = mailSender.createMimeMessage();
