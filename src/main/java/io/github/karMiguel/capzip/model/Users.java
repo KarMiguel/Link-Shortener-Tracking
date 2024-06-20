@@ -29,7 +29,7 @@ public class Users implements UserDetails {
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -39,8 +39,11 @@ public class Users implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.COMMOM;
+    private Role role;
+    @PrePersist
+    public void prePersist() {
+        this.role = Role.COMMOM;
+    }
 
     @CreatedDate
     @Column(name = "date_created", updatable = false)
