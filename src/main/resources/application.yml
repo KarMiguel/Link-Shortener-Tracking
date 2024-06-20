@@ -1,61 +1,44 @@
-# Segurança
 security:
   jwt:
     token:
       secret-key: ${SECRETKEY}
       expire-length: 720000
 
-#spring:
- # datasource:
-  #  url: jdbc:postgresql://localhost:5432/db_capzip?useTimezone=true&serverTimezone=UTC
-   # username: postgres
-    #password: adminpass
-    spring:
-      datasource:
-        url: ${DATABASE_URL}
-        username: ${PGUSER}
-        password: ${PGPASSWORD}
-
-
-  # JPA
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
   jpa:
     open-in-view: false
     hibernate:
       ddl-auto: update
     show-sql: false
 
-  # Email
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${EMAIL}
-    #password: ${sua_password} #htpps://myaccount.google.com/apppasswords
-    password : ${PASSWORDEMAIL}
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: ${EMAIL}
+  password: ${PASSWORDEMAIL}
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+  test-connection: true
 
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-    test-connection: true
-
-
-# Configuracao do Springdoc OpenAPI
 springdoc:
   swagger-ui:
     use-root-path: true
   packagesToScan: io.github.karMiguel.capzip.controllers
 
-
-# CORS
 cors:
   originPatterns:
     - "http://localhost:3000"
     - "http://localhost:8080"
     - "http://localhost:4200"
-    -
-# Servidor
+
 server:
   port: 8090
 
