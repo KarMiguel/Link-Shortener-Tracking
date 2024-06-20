@@ -1,16 +1,12 @@
 package io.github.karMiguel.capzip.model;
 
-
 import io.github.karMiguel.capzip.model.enums.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -21,19 +17,19 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-
 public class Users implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -42,13 +38,13 @@ public class Users implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.COMMOM;
 
     @CreatedDate
-    @Column(name = "date_created")
+    @Column(name = "date_created", updatable = false)
     private LocalDateTime dateCreated;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -84,6 +80,4 @@ public class Users implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
 }
