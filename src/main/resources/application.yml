@@ -39,7 +39,4 @@ cors:
     - "http://localhost:8080"
     - "http://localhost:4200"
 
-server:
-  port: 8090
-
 DOMAIN_URL: ${DOMAIN_URL}
