@@ -1,9 +1,6 @@
 package io.github.karMiguel.capzip.exceptions.handler;
 
-import io.github.karMiguel.capzip.exceptions.EntityNotFoundException;
-import io.github.karMiguel.capzip.exceptions.InvalidJwtAuthenticationException;
-import io.github.karMiguel.capzip.exceptions.UrlRedirectException;
-import io.github.karMiguel.capzip.exceptions.UsernameUniqueViolationException;
+import io.github.karMiguel.capzip.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -90,6 +87,17 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY,  ex.getMessage(), result));
     }
 
+    @ExceptionHandler(LinkShortException.class)
+    public ResponseEntity<ErrorMessage> LinkShortExceptionHandler(
+            Exception ex,
+            HttpServletRequest request
+    ) {
+        log.error("Erro interno do servidor - {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> genericExceptionHandler(
             Exception ex,
