@@ -5,6 +5,7 @@ import io.github.karMiguel.capzip.dtos.ShortLinkDto;
 import io.github.karMiguel.capzip.dtos.TotalDto;
 import io.github.karMiguel.capzip.exceptions.EntityNotFoundException;
 import io.github.karMiguel.capzip.exceptions.InvalidJwtAuthenticationException;
+import io.github.karMiguel.capzip.exceptions.LinkShortException;
 import io.github.karMiguel.capzip.exceptions.ResponseSuccess;
 import io.github.karMiguel.capzip.model.LinkShort;
 import io.github.karMiguel.capzip.model.Users;
@@ -12,6 +13,7 @@ import io.github.karMiguel.capzip.security.JwtUserDetails;
 import io.github.karMiguel.capzip.services.LinkShortServices;
 import io.github.karMiguel.capzip.services.UserServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -42,6 +44,11 @@ public class LinkShortController {
             throw new InvalidJwtAuthenticationException("Não Autorizado!");
         }
 
+        String urlRegex = "^(https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$";
+        if (!link.matches(urlRegex)) {
+            throw new LinkShortException("Link inválido, não está em formato web.");
+        }
+
         Users user = userServices.findByEmail(userDetails.getEmailAutentic());
         String shortLink = linkShortServices.generateShortLink(link, user);
         if (shortLink != null) {
@@ -53,6 +60,11 @@ public class LinkShortController {
 
     @PostMapping("/api/v1/link/shorten-link-no-auth")
     public ResponseEntity<?> shortenLinkNoAuth( @RequestParam String link) {
+
+        String urlRegex = "^(https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$";
+        if (!link.matches(urlRegex)) {
+            throw new LinkShortException("Link inválido, não está em formato web.");
+        }
 
         Users user = userServices.findById(Long.valueOf(1));
         String shortLink = linkShortServices.generateShortLink(link, user);
