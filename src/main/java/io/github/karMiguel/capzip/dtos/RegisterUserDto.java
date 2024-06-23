@@ -20,7 +20,7 @@ public class RegisterUserDto {
     private String email;
 
     @NotBlank
-    @Size(min = 6,max = 6)
+    @Size(min = 8,max = 15)
     private String password;
 
 
