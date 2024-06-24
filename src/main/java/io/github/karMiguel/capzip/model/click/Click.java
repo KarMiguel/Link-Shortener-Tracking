@@ -1,6 +1,7 @@
-package io.github.karMiguel.capzip.model;
+package io.github.karMiguel.capzip.model.click;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.karMiguel.capzip.model.linkShort.LinkShort;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import lombok.*;

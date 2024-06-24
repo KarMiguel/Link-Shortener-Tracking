@@ -19,9 +19,9 @@ public class OpenApiConfig {
     OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("RESTful API with Java 21 and Spring Boot 3.2.0")
+                        .title("Cap Zip")
                         .version("v1")
-                        .description("Some description about your API")
+                        .description("Encurtador de link com rastreamento")
                         .termsOfService("https://github.com/KarMiguel")
                         .license(
                                 new License()

@@ -1,16 +1,16 @@
 package io.github.karMiguel.capzip.controllers;
 
-import io.github.karMiguel.capzip.dtos.AccountCredentialsDto;
-import io.github.karMiguel.capzip.dtos.RegisterUserDto;
-import io.github.karMiguel.capzip.dtos.UpdatePasswordDto;
+import io.github.karMiguel.capzip.dtos.usersDto.AccountCredentialsDto;
+import io.github.karMiguel.capzip.dtos.usersDto.RegisterUserDto;
+import io.github.karMiguel.capzip.dtos.usersDto.UpdatePasswordDto;
 import io.github.karMiguel.capzip.dtos.mapper.UserMapper;
 import io.github.karMiguel.capzip.exceptions.ResponseSuccess;
-import io.github.karMiguel.capzip.model.ResetPassword;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.users.ResetPassword;
+import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.model.enums.StatusResetPassword;
-import io.github.karMiguel.capzip.services.EmailServices;
-import io.github.karMiguel.capzip.services.ResetPasswordServices;
-import io.github.karMiguel.capzip.services.UserServices;
+import io.github.karMiguel.capzip.services.resetPasswordServices.EmailServices;
+import io.github.karMiguel.capzip.services.resetPasswordServices.ResetPasswordServices;
+import io.github.karMiguel.capzip.services.usersServices.UserServices;
 import io.github.karMiguel.capzip.utils.ResetPasswordUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;

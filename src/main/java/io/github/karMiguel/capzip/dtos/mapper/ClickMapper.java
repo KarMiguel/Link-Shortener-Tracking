@@ -1,7 +1,7 @@
 package io.github.karMiguel.capzip.dtos.mapper;
 
-import io.github.karMiguel.capzip.dtos.ClickDTO;
-import io.github.karMiguel.capzip.model.Click;
+import io.github.karMiguel.capzip.dtos.clickDto.ClickDTO;
+import io.github.karMiguel.capzip.model.click.Click;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 

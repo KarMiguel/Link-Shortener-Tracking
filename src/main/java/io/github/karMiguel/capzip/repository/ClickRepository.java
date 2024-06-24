@@ -1,8 +1,8 @@
 package io.github.karMiguel.capzip.repository;
 
-import io.github.karMiguel.capzip.model.Click;
-import io.github.karMiguel.capzip.model.LinkShort;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.click.Click;
+import io.github.karMiguel.capzip.model.linkShort.LinkShort;
+import io.github.karMiguel.capzip.model.users.Users;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

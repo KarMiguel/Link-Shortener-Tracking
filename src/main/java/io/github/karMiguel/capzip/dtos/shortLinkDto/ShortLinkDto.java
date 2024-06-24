@@ -1,5 +1,4 @@
-package io.github.karMiguel.capzip.dtos;
-
+package io.github.karMiguel.capzip.dtos.shortLinkDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClicksByCityDTO {
-    private String city;
-    private long count;
+public class ShortLinkDto {
+
+    private String shortLink;
 }

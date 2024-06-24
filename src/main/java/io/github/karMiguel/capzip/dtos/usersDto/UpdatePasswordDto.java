@@ -1,5 +1,4 @@
-package io.github.karMiguel.capzip.dtos;
-
+package io.github.karMiguel.capzip.dtos.usersDto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,19 +8,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class AccountCredentialsDto {
+public class UpdatePasswordDto {
 
 
     @NotBlank
     @Email( regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$",message = "formato email inválido.")
-    private String email;
+    private String username;
 
     @NotBlank
-    private String password;
+    @Size(min = 6,max = 6)
+    private String newPassword;
 
+    @NotBlank
+    @Size(min = 6,max = 6)
+    private String confPassword;
 
+    @NotBlank(message = "Código não pode ser nulo.")
+    private String code;
 }

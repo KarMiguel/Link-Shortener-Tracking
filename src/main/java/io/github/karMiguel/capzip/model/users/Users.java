@@ -1,4 +1,4 @@
-package io.github.karMiguel.capzip.model;
+package io.github.karMiguel.capzip.model.users;
 
 import io.github.karMiguel.capzip.model.enums.Role;
 import jakarta.persistence.*;

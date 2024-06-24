@@ -1,18 +1,17 @@
-package io.github.karMiguel.capzip.services;
+package io.github.karMiguel.capzip.services.clickServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.karMiguel.capzip.dtos.ClickDTO;
-import io.github.karMiguel.capzip.dtos.ClicksByCityDTO;
-import io.github.karMiguel.capzip.dtos.ClicksByPeriodDTO;
+import io.github.karMiguel.capzip.dtos.clickDto.ClickDTO;
+import io.github.karMiguel.capzip.dtos.clickDto.ClicksByCityDTO;
+import io.github.karMiguel.capzip.dtos.clickDto.ClicksByPeriodDTO;
 import io.github.karMiguel.capzip.dtos.mapper.ClickMapper;
 import io.github.karMiguel.capzip.exceptions.EntityNotFoundException;
-import io.github.karMiguel.capzip.model.Click;
-import io.github.karMiguel.capzip.model.LinkShort;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.click.Click;
+import io.github.karMiguel.capzip.model.linkShort.LinkShort;
+import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.repository.ClickRepository;
 import io.github.karMiguel.capzip.repository.LinkShortRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,9 +34,7 @@ public class ClickServices {
 
     @Transactional
     public void saveClick(Click click) {
-        log.info("Salvando click:");
         clickRepository.save(click);
-        log.info("Salvooooooooooo bddd click: {}", click);
 
     }
 

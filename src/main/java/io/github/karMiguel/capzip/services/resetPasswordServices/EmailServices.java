@@ -1,4 +1,4 @@
-package io.github.karMiguel.capzip.services;
+package io.github.karMiguel.capzip.services.resetPasswordServices;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

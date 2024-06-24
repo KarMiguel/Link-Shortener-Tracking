@@ -1,4 +1,5 @@
-package io.github.karMiguel.capzip.dtos;
+package io.github.karMiguel.capzip.dtos.shortLinkDto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +10,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShortLinkDto {
+public class LinkShortOutDto {
+
+    private String linkLong;
 
     private String shortLink;
+
+    private Long qtdClick;
+
 }

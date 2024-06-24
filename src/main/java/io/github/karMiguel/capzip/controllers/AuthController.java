@@ -1,7 +1,7 @@
 package io.github.karMiguel.capzip.controllers;
 
-import io.github.karMiguel.capzip.dtos.AccountCredentialsDto;
-import io.github.karMiguel.capzip.services.AuthServices;
+import io.github.karMiguel.capzip.dtos.usersDto.AccountCredentialsDto;
+import io.github.karMiguel.capzip.services.usersServices.AuthServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

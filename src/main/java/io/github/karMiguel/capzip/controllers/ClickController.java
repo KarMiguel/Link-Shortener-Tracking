@@ -1,21 +1,18 @@
 package io.github.karMiguel.capzip.controllers;
 
-import io.github.karMiguel.capzip.dtos.ClickDTO;
-import io.github.karMiguel.capzip.dtos.ClicksByCityDTO;
-import io.github.karMiguel.capzip.dtos.ClicksByPeriodDTO;
-import io.github.karMiguel.capzip.dtos.TotalDto;
-import io.github.karMiguel.capzip.dtos.mapper.ClickMapper;
+import io.github.karMiguel.capzip.dtos.clickDto.ClickDTO;
+import io.github.karMiguel.capzip.dtos.clickDto.ClicksByCityDTO;
+import io.github.karMiguel.capzip.dtos.clickDto.ClicksByPeriodDTO;
+import io.github.karMiguel.capzip.dtos.shortLinkDto.TotalDto;
 import io.github.karMiguel.capzip.exceptions.InvalidJwtAuthenticationException;
 import io.github.karMiguel.capzip.exceptions.UrlRedirectException;
-import io.github.karMiguel.capzip.model.Click;
-import io.github.karMiguel.capzip.model.LinkShort;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.click.Click;
+import io.github.karMiguel.capzip.model.linkShort.LinkShort;
+import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.security.JwtUserDetails;
-import io.github.karMiguel.capzip.services.ClickServices;
-import io.github.karMiguel.capzip.services.LinkShortServices;
-import io.github.karMiguel.capzip.services.UserServices;
+import io.github.karMiguel.capzip.services.clickServices.ClickServices;
+import io.github.karMiguel.capzip.services.linkShortServices.LinkShortServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +25,12 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @Tag(name = "Clicks", description = "Endpoints for Managing clicks links")
 @RestController

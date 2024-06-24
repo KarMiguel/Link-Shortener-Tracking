@@ -1,4 +1,4 @@
-package io.github.karMiguel.capzip.dtos;
+package io.github.karMiguel.capzip.dtos.clickDto;
 
 
 import lombok.AllArgsConstructor;
@@ -10,12 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinkShortOutDto {
-
-    private String linkLong;
-
-    private String shortLink;
-
-    private Long qtdClick;
-
+public class ClicksByCityDTO {
+    private String city;
+    private long count;
 }

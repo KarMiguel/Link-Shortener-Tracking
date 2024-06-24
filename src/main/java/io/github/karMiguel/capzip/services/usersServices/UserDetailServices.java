@@ -1,7 +1,7 @@
-package io.github.karMiguel.capzip.services;
+package io.github.karMiguel.capzip.services.usersServices;
 
 
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.repository.UserRepository;
 import io.github.karMiguel.capzip.security.JwtUserDetails;
 import lombok.RequiredArgsConstructor;

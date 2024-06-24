@@ -1,4 +1,4 @@
-package io.github.karMiguel.capzip.dtos;
+package io.github.karMiguel.capzip.dtos.usersDto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

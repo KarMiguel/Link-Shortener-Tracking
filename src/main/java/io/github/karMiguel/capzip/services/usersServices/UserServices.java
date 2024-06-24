@@ -1,6 +1,6 @@
-package io.github.karMiguel.capzip.services;
+package io.github.karMiguel.capzip.services.usersServices;
 
-import io.github.karMiguel.capzip.dtos.UpdatePasswordDto;
+import io.github.karMiguel.capzip.dtos.usersDto.UpdatePasswordDto;
 import io.github.karMiguel.capzip.exceptions.PasswordInvalidException;
 import io.github.karMiguel.capzip.exceptions.UsernameUniqueViolationException;
 import io.github.karMiguel.capzip.repository.UserRepository;
@@ -11,7 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.users.Users;
 
 @Service
 @RequiredArgsConstructor

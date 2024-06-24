@@ -1,8 +1,8 @@
 package io.github.karMiguel.capzip.dtos.mapper;
 
-import io.github.karMiguel.capzip.dtos.LinkShortInDto;
-import io.github.karMiguel.capzip.dtos.LinkShortOutDto;
-import io.github.karMiguel.capzip.model.LinkShort;
+import io.github.karMiguel.capzip.dtos.shortLinkDto.LinkShortInDto;
+import io.github.karMiguel.capzip.dtos.shortLinkDto.LinkShortOutDto;
+import io.github.karMiguel.capzip.model.linkShort.LinkShort;
 import io.github.karMiguel.capzip.repository.ClickRepository;
 import org.modelmapper.ModelMapper;
 

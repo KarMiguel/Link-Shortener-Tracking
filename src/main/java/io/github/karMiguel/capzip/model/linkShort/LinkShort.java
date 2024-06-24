@@ -1,5 +1,6 @@
-package io.github.karMiguel.capzip.model;
+package io.github.karMiguel.capzip.model.linkShort;
 
+import io.github.karMiguel.capzip.model.users.Users;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import lombok.*;

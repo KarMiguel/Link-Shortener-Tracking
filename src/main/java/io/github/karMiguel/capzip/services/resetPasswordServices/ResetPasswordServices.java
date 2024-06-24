@@ -1,8 +1,8 @@
-package io.github.karMiguel.capzip.services;
+package io.github.karMiguel.capzip.services.resetPasswordServices;
 
 
-import io.github.karMiguel.capzip.model.ResetPassword;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.users.ResetPassword;
+import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.model.enums.StatusResetPassword;
 import io.github.karMiguel.capzip.repository.ResetPasswordRepository;
 import lombok.RequiredArgsConstructor;

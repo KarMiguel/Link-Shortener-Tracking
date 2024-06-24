@@ -1,8 +1,7 @@
-package io.github.karMiguel.capzip.dtos;
+package io.github.karMiguel.capzip.dtos.clickDto;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.karMiguel.capzip.model.LinkShort;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

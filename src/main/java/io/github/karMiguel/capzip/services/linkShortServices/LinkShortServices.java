@@ -1,9 +1,9 @@
-package io.github.karMiguel.capzip.services;
+package io.github.karMiguel.capzip.services.linkShortServices;
 
-import io.github.karMiguel.capzip.dtos.LinkShortOutDto;
+import io.github.karMiguel.capzip.dtos.shortLinkDto.LinkShortOutDto;
 import io.github.karMiguel.capzip.dtos.mapper.LinkShortMapper;
-import io.github.karMiguel.capzip.model.LinkShort;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.linkShort.LinkShort;
+import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.repository.ClickRepository;
 import io.github.karMiguel.capzip.repository.LinkShortRepository;
 import lombok.extern.slf4j.Slf4j;

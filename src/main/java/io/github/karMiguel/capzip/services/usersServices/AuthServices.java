@@ -1,14 +1,13 @@
-package io.github.karMiguel.capzip.services;
+package io.github.karMiguel.capzip.services.usersServices;
 
-import io.github.karMiguel.capzip.dtos.AccountCredentialsDto;
-import io.github.karMiguel.capzip.dtos.TokenDto;
+import io.github.karMiguel.capzip.dtos.usersDto.AccountCredentialsDto;
+import io.github.karMiguel.capzip.dtos.usersDto.TokenDto;
 import io.github.karMiguel.capzip.exceptions.InvalidJwtAuthenticationException;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.repository.UserRepository;
 import io.github.karMiguel.capzip.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

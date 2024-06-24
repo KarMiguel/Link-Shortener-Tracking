@@ -1,8 +1,8 @@
 package io.github.karMiguel.capzip.dtos.mapper;
 
 
-import io.github.karMiguel.capzip.dtos.RegisterUserDto;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.dtos.usersDto.RegisterUserDto;
+import io.github.karMiguel.capzip.model.users.Users;
 import org.modelmapper.ModelMapper;
 
 public class UserMapper {

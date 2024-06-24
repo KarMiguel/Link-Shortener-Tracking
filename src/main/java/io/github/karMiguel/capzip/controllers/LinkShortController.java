@@ -1,19 +1,18 @@
 package io.github.karMiguel.capzip.controllers;
 
-import io.github.karMiguel.capzip.dtos.LinkShortOutDto;
-import io.github.karMiguel.capzip.dtos.ShortLinkDto;
-import io.github.karMiguel.capzip.dtos.TotalDto;
+import io.github.karMiguel.capzip.dtos.shortLinkDto.LinkShortOutDto;
+import io.github.karMiguel.capzip.dtos.shortLinkDto.ShortLinkDto;
+import io.github.karMiguel.capzip.dtos.shortLinkDto.TotalDto;
 import io.github.karMiguel.capzip.exceptions.EntityNotFoundException;
 import io.github.karMiguel.capzip.exceptions.InvalidJwtAuthenticationException;
 import io.github.karMiguel.capzip.exceptions.LinkShortException;
 import io.github.karMiguel.capzip.exceptions.ResponseSuccess;
-import io.github.karMiguel.capzip.model.LinkShort;
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.linkShort.LinkShort;
+import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.security.JwtUserDetails;
-import io.github.karMiguel.capzip.services.LinkShortServices;
-import io.github.karMiguel.capzip.services.UserServices;
+import io.github.karMiguel.capzip.services.linkShortServices.LinkShortServices;
+import io.github.karMiguel.capzip.services.usersServices.UserServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;

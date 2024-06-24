@@ -1,4 +1,4 @@
-package io.github.karMiguel.capzip.dtos;
+package io.github.karMiguel.capzip.dtos.usersDto;
 
 
 import lombok.AllArgsConstructor;

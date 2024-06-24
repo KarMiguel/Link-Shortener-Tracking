@@ -1,7 +1,7 @@
 package io.github.karMiguel.capzip.security;
 
 
-import io.github.karMiguel.capzip.model.Users;
+import io.github.karMiguel.capzip.model.users.Users;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
