@@ -63,7 +63,8 @@ public class ClickController {
 
             if (user.getId() != 1L) {
                 Click click = new Click();
-                click.setIp(clickServices.getIp());
+                //click.setIp(clickServices.getIp());
+                click.setIp(request.getHeader("X-FORWARDED-FOR"));
                 click.setLocalization(clickServices.getLocationFromIp(clickServices.getIp()));
                 click.setLinkShort(redirect);
                 click.setUserAgent(request.getHeader("User-Agent"));
