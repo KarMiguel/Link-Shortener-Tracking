@@ -1,7 +1,6 @@
 package io.github.karMiguel.capzip.controllers;
 
 import io.github.karMiguel.capzip.dtos.usersDto.AccountCredentialsDto;
-import io.github.karMiguel.capzip.exceptions.EntityNotFoundException;
 import io.github.karMiguel.capzip.exceptions.ResponseSuccess;
 import io.github.karMiguel.capzip.services.usersServices.AuthServices;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,12 +23,7 @@ public class AuthController {
 
 	@SuppressWarnings("rawtypes")
 	@Operation(summary = "Authenticates a user and returns a token")
-	@ApiResponse(responseCode = "200", description = "Successful authentication",
-			content = @Content(mediaType = "text/plain",
-					schema = @Schema(implementation = String.class)))
-	@ApiResponse(responseCode = "400", description = "Invalid client request",
-			content = @Content(mediaType = "text/plain"))
-	@PostMapping(value = "/signin")
+	@PostMapping("/signin")
 	public ResponseEntity signin(@RequestBody AccountCredentialsDto data) {
 		if (authServices.checkIfParamsIsNotNull(data)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
@@ -51,7 +45,7 @@ public class AuthController {
 					schema = @Schema(implementation = String.class)))
 	@ApiResponse(responseCode = "400", description = "Invalid client request",
 			content = @Content(mediaType = "text/plain"))
-	@PutMapping(value = "/refresh/{username}")
+	@PutMapping("/refresh/{username}")
 	public ResponseEntity refreshToken(@PathVariable("username") String username,
 									   @RequestHeader("Authorization") String refreshToken) {
 		if (authServices.checkIfParamsIsNotNull(username, refreshToken))
@@ -66,7 +60,7 @@ public class AuthController {
 	@ApiResponse(responseCode = "400", description = "Logout failed",
 			content = @Content(mediaType = "application/json",
 					schema = @Schema(implementation = ResponseSuccess.class)))
-	@PostMapping(value = "/logout")
+	@PostMapping("/logout")
 	public ResponseEntity logout(@RequestHeader("Authorization") String token) {
 		boolean isLoggedOut = authServices.logout(token);
 		if (!isLoggedOut) {
