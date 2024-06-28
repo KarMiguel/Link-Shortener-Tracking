@@ -2,7 +2,7 @@ security:
   jwt:
     token:
       secret-key: ${SECRETKEY}
-      expire-length: 720000
+      expire-length: 7200000
 
 spring:
   datasource:
