@@ -40,11 +40,6 @@ public class AuthController {
 
 	@SuppressWarnings("rawtypes")
 	@Operation(summary = "Refresh token for authenticated user and returns a token")
-	@ApiResponse(responseCode = "200", description = "Token refreshed successfully",
-			content = @Content(mediaType = "text/plain",
-					schema = @Schema(implementation = String.class)))
-	@ApiResponse(responseCode = "400", description = "Invalid client request",
-			content = @Content(mediaType = "text/plain"))
 	@PutMapping("/refresh/{username}")
 	public ResponseEntity refreshToken(@PathVariable("username") String username,
 									   @RequestHeader("Authorization") String refreshToken) {
@@ -55,11 +50,6 @@ public class AuthController {
 		return token;
 	}
 	@Operation(summary = "Logs out an authenticated user")
-	@ApiResponse(responseCode = "200", description = "User logged out successfully",
-			content = @Content(mediaType = "text/plain"))
-	@ApiResponse(responseCode = "400", description = "Logout failed",
-			content = @Content(mediaType = "application/json",
-					schema = @Schema(implementation = ResponseSuccess.class)))
 	@PostMapping("/logout")
 	public ResponseEntity logout(@RequestHeader("Authorization") String token) {
 		boolean isLoggedOut = authServices.logout(token);

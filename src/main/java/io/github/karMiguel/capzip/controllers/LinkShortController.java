@@ -41,9 +41,6 @@ public class LinkShortController {
 
 
     @Operation(summary = "Shorten a link with authentication", description = "Shortens a valid web link for authenticated users.")
-    @ApiResponse(responseCode = "200", description = "Successfully shortened the link", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ShortLinkDto.class))
-    })
     @PostMapping("/api/v1/link/shorten-link")
     public ResponseEntity<?> shortenLink(@RequestParam String link,
                                          @AuthenticationPrincipal JwtUserDetails userDetails) {
@@ -67,9 +64,6 @@ public class LinkShortController {
     }
 
     @Operation(summary = "Shorten a link without authentication", description = "Shortens a valid web link for non-authenticated users.")
-    @ApiResponse(responseCode = "200", description = "Successfully shortened the link", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ShortLinkDto.class))
-    })
     @PostMapping("/api/v1/link/shorten-link-no-auth")
     public ResponseEntity<?> shortenLinkNoAuth( @RequestParam String link) {
 
@@ -87,9 +81,6 @@ public class LinkShortController {
         }
     }
     @Operation(summary = "List all shortened links", description = "Lists all shortened links of the authenticated user.")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of links", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = LinkShortOutDto.class))
-    })
     @GetMapping("/api/v1/link/my-link-short")
     public ResponseEntity<Page<LinkShortOutDto>> listAllShortLinks(
             @AuthenticationPrincipal JwtUserDetails userDetails,
@@ -115,10 +106,6 @@ public class LinkShortController {
     }
 
     @Operation(summary = "Delete a shortened link", description = "Deletes a shortened link of the authenticated user.")
-    @ApiResponse(responseCode = "204", description = "Link successfully deleted")
-    @ApiResponse(responseCode = "404", description = "Link not found", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = EntityNotFoundException.class))
-    })
     @DeleteMapping("/{shortLink}")
     public ResponseEntity<?> deleteShortLink(
             @PathVariable String shortLink,
@@ -149,9 +136,6 @@ public class LinkShortController {
         }
     }
     @Operation(summary = "Count total shortened links", description = "Counts the total number of shortened links.")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved the total count", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = TotalDto.class))
-    })
     @GetMapping("/api/v1/total/short-link")
     public ResponseEntity<TotalDto> countShortLinks() {
         int totalLinks = Math.toIntExact(linkShortServices.countShortLinks());

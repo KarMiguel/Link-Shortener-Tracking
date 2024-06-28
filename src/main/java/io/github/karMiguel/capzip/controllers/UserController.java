@@ -35,7 +35,6 @@ public class UserController {
     private final ResetPasswordServices resetPasswordService;
 
     @Operation(summary = "Register a new user")
-    @ApiResponse(responseCode = "201", description = "User registered successfully")
     @PostMapping("/register")
     public ResponseEntity<Void> registerUser(@RequestBody @Valid RegisterUserDto dto) {
         userServices.register(UserMapper.toUser(dto));
@@ -43,11 +42,6 @@ public class UserController {
     }
 
     @Operation(summary = "Request password reset code")
-    @ApiResponse(responseCode = "200", description = "Reset code sent successfully",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ResponseSuccess.class)))
-    @ApiResponse(responseCode = "400", description = "Invalid request or code already sent",
-            content = @Content(mediaType = "application/json"))
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String email) throws MessagingException {
         try {
@@ -71,11 +65,6 @@ public class UserController {
 
 
     @Operation(summary = "Validate password reset code and update password")
-    @ApiResponse(responseCode = "200", description = "Password reset successful",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ResponseSuccess.class)))
-    @ApiResponse(responseCode = "400", description = "Invalid reset code or request",
-            content = @Content(mediaType = "application/json"))
     @PostMapping("/reset-password/validate")
     public ResponseEntity<?> validateResetPassword(@RequestBody @Valid UpdatePasswordDto dto) {
         try {

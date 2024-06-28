@@ -46,9 +46,6 @@ public class ClickController {
     private final ClickServices clickServices;
 
     @Operation(summary = "Redirect to original link")
-    @ApiResponse(responseCode = "302", description = "Redirects to the original long URL")
-    @ApiResponse(responseCode = "500", description = "Redirects Invalid!")
-    @ApiResponse(responseCode = "404", description = "URL not found for redirection", content = @io.swagger.v3.oas.annotations.media.Content)
     @CrossOrigin(origins = "*")
     @GetMapping("/{shortLink}/")
     public void redirectToOriginalLink(@PathVariable String shortLink, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -87,9 +84,6 @@ public class ClickController {
     }
     //clicks by short link
     @Operation(summary = "Get all clicks for a short link")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved the clicks", content = {
-            @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = PagedModel.class))
-    })
     @GetMapping("/api/v1/clicks/all")
     public ResponseEntity<PagedModel<EntityModel<ClickDTO>>> clicksByShortLink(
             @RequestParam String shortlink,
@@ -115,9 +109,6 @@ public class ClickController {
     }
 
     @Operation(summary = "Get clicks by city")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved the clicks by city", content = {
-            @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = Page.class))
-    })
     @GetMapping("/api/v1/clicks/by-city")
     public ResponseEntity<Page<ClicksByCityDTO>> getClicksByCity(
             @RequestParam String shortLink,
@@ -143,9 +134,6 @@ public class ClickController {
         return ResponseEntity.ok(clicksByCity);
     }
     @Operation(summary = "Get clicks by period day")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved the clicks by period", content = {
-            @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ClicksByPeriodDTO.class))
-    })
     @GetMapping("/api/v1/clicks/by-period")
     public ResponseEntity<ClicksByPeriodDTO> getClicksByPeriod(
             @RequestParam String shortLink,
@@ -165,9 +153,6 @@ public class ClickController {
         return ResponseEntity.ok(clicksByPeriod);
     }
     @Operation(summary = "Count total clicks")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved the total click count", content = {
-            @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = TotalDto.class))
-    })
     @GetMapping("/api/v1/total/clicks")
     public ResponseEntity<TotalDto> countCLicks() {
         int totalClicks = Math.toIntExact(clickServices.countClicks());
