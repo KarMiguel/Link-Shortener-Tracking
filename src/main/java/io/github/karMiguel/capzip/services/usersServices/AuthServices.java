@@ -76,4 +76,9 @@ public class AuthServices {
         return data == null || data.getEmail() == null || data.getEmail().isBlank()
                 || data.getPassword() == null || data.getPassword().isBlank();
     }
+    public boolean logout(String token) {
+        tokenProvider.invalidateToken(token);
+        return true;
+    }
+
 }

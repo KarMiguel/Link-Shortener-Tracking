@@ -19,6 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class JwtTokenProvider {
@@ -32,6 +34,9 @@ public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
 
     private Algorithm algorithm;
+
+    // Set to store invalidated tokens
+    private Set<String> invalidatedTokens = new HashSet<>();
 
     public JwtTokenProvider(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -94,6 +99,9 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
+            if (invalidatedTokens.contains(token)) {
+                throw new InvalidJwtAuthenticationException("Expired or invalid JWT token!");
+            }
             DecodedJWT decodedJWT = decodedToken(token);
             if (decodedJWT.getExpiresAt().before(new Date())) {
                 throw new InvalidJwtAuthenticationException("Expired or invalid JWT token!");
@@ -114,5 +122,9 @@ public class JwtTokenProvider {
         String username = decodedJWT.getSubject();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public void invalidateToken(String token) {
+        invalidatedTokens.add(token);
     }
 }
