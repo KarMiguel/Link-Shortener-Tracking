@@ -47,6 +47,7 @@ public class ClickController {
 
     @Operation(summary = "Redirect to original link")
     @ApiResponse(responseCode = "302", description = "Redirects to the original long URL")
+    @ApiResponse(responseCode = "500", description = "Redirects Invalid!")
     @ApiResponse(responseCode = "404", description = "URL not found for redirection", content = @io.swagger.v3.oas.annotations.media.Content)
     @CrossOrigin(origins = "*")
     @GetMapping("/{shortLink}/")

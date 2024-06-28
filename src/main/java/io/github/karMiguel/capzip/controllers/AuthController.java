@@ -32,12 +32,13 @@ public class AuthController {
 	@PostMapping(value = "/signin")
 	public ResponseEntity signin(@RequestBody AccountCredentialsDto data) {
 		if (authServices.checkIfParamsIsNotNull(data)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseSuccess("Invalid client request!"));
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
 		}
+
 		var token = authServices.signin(data);
 
 		if (token == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseSuccess("Invalid credentials!"));
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid client request!");
 		} else {
 			return ResponseEntity.ok(token);
 		}
@@ -54,16 +55,11 @@ public class AuthController {
 	public ResponseEntity refreshToken(@PathVariable("username") String username,
 									   @RequestHeader("Authorization") String refreshToken) {
 		if (authServices.checkIfParamsIsNotNull(username, refreshToken))
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new EntityNotFoundException("Invalid client request!"));
-
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
 		var token = authServices.refreshToken(username, refreshToken);
-		if (token == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseSuccess("Invalid refresh token!"));
-		} else {
-			return ResponseEntity.ok(token);
-		}
+		if (token == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
+		return token;
 	}
-
 	@Operation(summary = "Logs out an authenticated user")
 	@ApiResponse(responseCode = "200", description = "User logged out successfully",
 			content = @Content(mediaType = "text/plain"))

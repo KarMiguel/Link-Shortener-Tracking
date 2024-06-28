@@ -49,13 +49,13 @@ public class UserController {
     @ApiResponse(responseCode = "400", description = "Invalid request or code already sent",
             content = @Content(mediaType = "application/json"))
     @PostMapping("/reset-password")
-    public ResponseEntity<ResponseSuccess> resetPassword(@RequestParam String email) {
+    public ResponseEntity<?> resetPassword(@RequestParam String email) throws MessagingException {
         try {
             Users user = userServices.findByEmail(email);
 
             ResetPassword latestResetCode = resetPasswordService.getLatestResetCode(user);
             if (latestResetCode != null && latestResetCode.getStatus() == StatusResetPassword.SEND) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseSuccess("A reset code has already been sent to your email."));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseSuccess("Um código de redefinição já foi enviado ao seu e-mail."));
             }
 
             String code = ResetPasswordUtil.generateCode();
@@ -63,11 +63,12 @@ public class UserController {
 
             resetPasswordService.saveResetCode(user, code);
 
-            return ResponseEntity.ok(new ResponseSuccess("Reset code sent to your email."));
+            return ResponseEntity.ok(new ResponseSuccess("Código de confirmação enviado por e-mail."));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseSuccess("Invalid email in our database."));
+            return ResponseEntity.ok(new ResponseSuccess("Email invalido no nosso banco de dados."));
         }
     }
+
 
     @Operation(summary = "Validate password reset code and update password")
     @ApiResponse(responseCode = "200", description = "Password reset successful",
@@ -76,24 +77,23 @@ public class UserController {
     @ApiResponse(responseCode = "400", description = "Invalid reset code or request",
             content = @Content(mediaType = "application/json"))
     @PostMapping("/reset-password/validate")
-    public ResponseEntity<ResponseSuccess> validateResetPassword(@RequestBody @Valid UpdatePasswordDto dto) {
+    public ResponseEntity<?> validateResetPassword(@RequestBody @Valid UpdatePasswordDto dto) {
         try {
             if (!ResetPasswordUtil.validateCode(dto.getCode())) {
-                return ResponseEntity.badRequest().body(new ResponseSuccess("Invalid reset code."));
+                return ResponseEntity.badRequest().body(new ResponseSuccess("Código de redefinição inválido."));
             }
             Users user = userServices.findByEmail(dto.getUsername());
 
             ResetPassword latestResetCode = resetPasswordService.getLatestResetCode(user);
             if (latestResetCode == null || !latestResetCode.getCode().equals(dto.getCode())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseSuccess("Provided reset code is invalid or expired."));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseSuccess("Código de redefinição fornecido é inválido ou expirado."));
             }
+            Users newPassword =  userServices.updatePassword(dto);
+            resetPasswordService.markCodeAsUsed(latestResetCode,newPassword.getPassword().toString());
 
-            Users updatedUser = userServices.updatePassword(dto);
-            resetPasswordService.markCodeAsUsed(latestResetCode, updatedUser.getPassword());
-
-            return ResponseEntity.ok(new ResponseSuccess("Password reset successful."));
+            return ResponseEntity.ok(new ResponseSuccess("Senha redefinida com sucesso!"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseSuccess("Error processing request."));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a solicitação.");
         }
     }
 }
