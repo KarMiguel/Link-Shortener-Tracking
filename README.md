@@ -2,6 +2,10 @@
 
 CapZip é uma aplicação para encurtar URLs com funcionalidades avançadas de gerenciamento e rastreamento de acessos.
 
+## Documentação 
+
+Acesse api da url  deploy : https://cap-zip.onrender.com/swagger-ui.html
+
 ## Funcionalidades
 
 - Autenticação de usuário com JWT para login e refresh token.
