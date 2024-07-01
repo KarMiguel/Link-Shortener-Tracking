@@ -111,13 +111,11 @@ public class LinkShortController {
             @PathVariable String shortLink,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
-        if (userDetails == null){
+        if (userDetails == null) {
             throw new InvalidJwtAuthenticationException("Não Autorizado!");
         }
 
-        String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);
-
-        LinkShort linkShort = linkShortServices.findByShortLink(extractedCode);
+        LinkShort linkShort = linkShortServices.findByShortLink(shortLink);
         if (linkShort == null) {
             throw new EntityNotFoundException("Link não encontrado.");
         }
@@ -125,7 +123,7 @@ public class LinkShortController {
             throw new InvalidJwtAuthenticationException("Esse link não pertence a você.");
         }
 
-        boolean deleted = linkShortServices.deleteShortLink(extractedCode, userDetails.getId());
+        boolean deleted = linkShortServices.deleteShortLink(shortLink, userDetails.getId());
 
         if (deleted) {
             return ResponseEntity
