@@ -52,5 +52,6 @@ public interface ClickRepository extends JpaRepository<Click, Long> {
 
     @Query("SELECT c FROM Click c WHERE c.linkShort.shortLink = :shortLink AND c.linkShort.user = :user")
     List<Click> findByShortLinkAndUser(@Param("shortLink") String shortLink, @Param("user") Users user);
+    void deleteByLinkShort(LinkShort linkShort);
 
 }
