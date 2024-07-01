@@ -58,7 +58,8 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 										antMatcher("/swagger-ui/**"),
 										antMatcher("/v3/api-docs/**"),
 										antMatcher("/api/v1/total/**"),
-										antMatcher("/api/v1/link/shorten-link-no-auth")
+										antMatcher("/api/v1/link/shorten-link-no-auth"),
+										antMatcher(HttpMethod.DELETE,"/**")
 
 								).permitAll()
 								.requestMatchers(HttpMethod.GET,"/**").permitAll()
