@@ -1,5 +1,6 @@
 package io.github.karMiguel.capzip.model.linkShort;
 
+import io.github.karMiguel.capzip.model.click.Click;
 import io.github.karMiguel.capzip.model.users.Users;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "link_short")

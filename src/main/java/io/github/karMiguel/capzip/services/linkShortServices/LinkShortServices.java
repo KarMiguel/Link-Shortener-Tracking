@@ -7,6 +7,8 @@ import io.github.karMiguel.capzip.model.linkShort.LinkShort;
 import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.repository.ClickRepository;
 import io.github.karMiguel.capzip.repository.LinkShortRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,15 +76,27 @@ public class LinkShortServices {
     }
 
     public LinkShort findByLinkLong(String shortLink) {
+
         log.info("code extraido = {}",shortLink);
 
         return linkShortRepository.findByShortLink(shortLink);
     }
-    public boolean deleteShortLink(String shortLink) {
-        LinkShort linkShort = findByShortLink(shortLink);
+
+    @Transactional
+    public boolean deleteShortLink(String shortLink,Long userId) {
+        if (shortLink.endsWith("/")) {
+            shortLink = shortLink.substring(0, shortLink.length() - 1);
+        }
+        String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);
+
+        LinkShort linkShort = findByShortLink(extractedCode);
+        if (!linkShort.getUser().getId().equals(userId)) {
+            throw new InvalidJwtAuthenticationException("Esse link não te pertence.");
+        }
         if (linkShort == null){
             return false;
         }
+        clickRepository.deleteByLinkShort(linkShort);
         linkShortRepository.delete(linkShort);
         return true;
     }

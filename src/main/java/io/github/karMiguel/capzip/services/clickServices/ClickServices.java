@@ -80,6 +80,9 @@ public class ClickServices {
     }
 
     public Page<ClickDTO> getClicksByShortLink(String shortLink, Pageable pageable) {
+        if (shortLink.endsWith("/")) {
+            shortLink = shortLink.substring(0, shortLink.length() - 1);
+        }
         String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);
         Page<Click> clicks = clickRepository.findByShortLink(extractedCode, pageable);
         return ClickMapper.toPageDto(clicks);
@@ -90,16 +93,22 @@ public class ClickServices {
     }
 
     public Page<ClicksByCityDTO> getClicksByCity(Users user, String shortLink, Pageable pageable) {
+        if (shortLink.endsWith("/")) {
+            shortLink = shortLink.substring(0, shortLink.length() - 1);
+        }
         String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);
         Page<Object[]> results = clickRepository.countClicksByCity(extractedCode, user, pageable);
         return results.map(result -> new ClicksByCityDTO((String) result[0], (Long) result[1]));
     }
     public ClicksByPeriodDTO getClicksByPeriod(String shortLink) {
+        if (shortLink.endsWith("/")) {
+            shortLink = shortLink.substring(0, shortLink.length() - 1);
+        }
         String extractedCode = shortLink.substring(shortLink.lastIndexOf('/') + 1);
 
         List<Object[]> results = clickRepository.countClicksByPeriod(extractedCode);
 
-        ClicksByPeriodDTO clicksByPeriod = new ClicksByPeriodDTO(0, 0, 0);
+        ClicksByPeriodDTO clicksByPeriod = new ClicksByPeriodDTO(0, 0, 0,0);
 
         for (Object[] result : results) {
             String period = (String) result[0];
@@ -116,6 +125,7 @@ public class ClickServices {
                     clicksByPeriod.setCountNight(count);
                     break;
                 default:
+                    clicksByPeriod.setCountDawn(count);
                     break;
             }
         }
