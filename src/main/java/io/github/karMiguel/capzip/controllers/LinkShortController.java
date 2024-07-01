@@ -115,7 +115,7 @@ public class LinkShortController {
             throw new InvalidJwtAuthenticationException("Não autorizado!");
         }
 
-        boolean deleted = linkShortServices.deleteShortLink(shortLink, userDetails.getId());
+        boolean deleted = linkShortServices.deleteShortLink(shortLink);
         if (deleted) {
             return ResponseEntity
                     .status(HttpStatus.NO_CONTENT)

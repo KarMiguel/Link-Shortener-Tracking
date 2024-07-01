@@ -78,13 +78,11 @@ public class LinkShortServices {
 
         return linkShortRepository.findByShortLink(shortLink);
     }
-    public boolean deleteShortLink(String shortLink, Long userId) {
+    public boolean deleteShortLink(String shortLink) {
         LinkShort linkShort = findByShortLink(shortLink);
-
-        if (!linkShort.getUser().getId().equals(userId)) {
-            throw new InvalidJwtAuthenticationException("Esse link não pertence a você.");
+        if (linkShort == null){
+            return false;
         }
-
         linkShortRepository.delete(linkShort);
         return true;
     }
