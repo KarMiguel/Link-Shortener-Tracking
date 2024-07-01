@@ -2,6 +2,7 @@ package io.github.karMiguel.capzip.services.linkShortServices;
 
 import io.github.karMiguel.capzip.dtos.shortLinkDto.LinkShortOutDto;
 import io.github.karMiguel.capzip.dtos.mapper.LinkShortMapper;
+import io.github.karMiguel.capzip.exceptions.InvalidJwtAuthenticationException;
 import io.github.karMiguel.capzip.model.linkShort.LinkShort;
 import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.repository.ClickRepository;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -76,15 +78,17 @@ public class LinkShortServices {
 
         return linkShortRepository.findByShortLink(shortLink);
     }
-
     public boolean deleteShortLink(String shortLink, Long userId) {
-        LinkShort linkShort = linkShortRepository.findByShortLink(shortLink);
-        if (linkShort != null && linkShort.getUser().getId().equals(userId)) {
-            linkShortRepository.delete(linkShort);
-            return true;
+        LinkShort linkShort = findByShortLink(shortLink);
+
+        if (!linkShort.getUser().getId().equals(userId)) {
+            throw new InvalidJwtAuthenticationException("Esse link não pertence a você.");
         }
-        return false;
-    }public Page<LinkShortOutDto> listAllShortLinks(Users user, Pageable pageable) {
+
+        linkShortRepository.delete(linkShort);
+        return true;
+    }
+    public Page<LinkShortOutDto> listAllShortLinks(Users user, Pageable pageable) {
         Page<Object[]> linkShortPage = linkShortRepository.findAllByUserOrderedByClickCount(user, pageable);
         return linkShortPage.map(obj -> {
             LinkShort linkShort = (LinkShort) obj[0];

@@ -112,19 +112,10 @@ public class LinkShortController {
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         if (userDetails == null) {
-            throw new InvalidJwtAuthenticationException("Não Autorizado!");
-        }
-
-        LinkShort linkShort = linkShortServices.findByShortLink(shortLink);
-        if (linkShort == null) {
-            throw new EntityNotFoundException("Link não encontrado.");
-        }
-        if (!linkShort.getUser().getId().equals(userDetails.getId())) {
-            throw new InvalidJwtAuthenticationException("Esse link não pertence a você.");
+            throw new InvalidJwtAuthenticationException("Não autorizado!");
         }
 
         boolean deleted = linkShortServices.deleteShortLink(shortLink, userDetails.getId());
-
         if (deleted) {
             return ResponseEntity
                     .status(HttpStatus.NO_CONTENT)
@@ -133,6 +124,7 @@ public class LinkShortController {
             throw new EntityNotFoundException("Link não encontrado.");
         }
     }
+
     @Operation(summary = "Count total shortened links", description = "Counts the total number of shortened links.")
     @GetMapping("/api/v1/total/short-link")
     public ResponseEntity<TotalDto> countShortLinks() {
