@@ -45,7 +45,6 @@ public class ClickController {
 
     private final ClickServices clickServices;
 
-    @Operation(summary = "Redirect to original link")
     @CrossOrigin(origins = "*")
     @GetMapping("/{shortLink}/")
     public void redirectToOriginalLink(@PathVariable String shortLink, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -58,11 +57,15 @@ public class ClickController {
             if (redirect == null) {
                 throw new UrlRedirectException("URL não encontrada para redirecionamento.");
             }
-
+            String ipAddress = request.getHeader("X-FORWARDED-FOR");
+            if (ipAddress == null) {
+                ipAddress = request.getRemoteAddr();
+            }
             if (user.getId() != 1L) {
                 Click click = new Click();
+                //click.setIp(request.getHeader("X-FORWARDED-FOR"));
                 //click.setIp(clickServices.getIp());
-                click.setIp(request.getHeader("X-FORWARDED-FOR"));
+                click.setIp(request.getRemoteAddr());
                 click.setLocalization(clickServices.getLocationFromIp(clickServices.getIp()));
                 click.setLinkShort(redirect);
                 click.setUserAgent(request.getHeader("User-Agent"));
