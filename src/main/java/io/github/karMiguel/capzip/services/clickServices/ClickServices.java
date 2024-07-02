@@ -15,6 +15,7 @@ import io.github.karMiguel.capzip.model.linkShort.LinkShort;
 import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.repository.ClickRepository;
 import io.github.karMiguel.capzip.repository.LinkShortRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -35,21 +36,22 @@ import java.util.*;
 @Slf4j
 public class ClickServices {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
+    private final ClickRepository clickRepository;
+    private final LinkShortRepository linkShortRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private ClickRepository clickRepository;
-    @Autowired
-    private LinkShortRepository linkShortRepository;
-    @Autowired
     private  DatabaseReader dbReader;
 
-    public ClickServices() throws IOException {
-        File database = new File("/path/to/GeoIP2-City.mmdb");
-        this.dbReader = new DatabaseReader.Builder(database).build();
+    @PostConstruct
+    public void initialize() {
+        try {
+            File database = new File("/path/to/GeoIP2-City.mmdb");
+            this.dbReader = new DatabaseReader.Builder(database).build();
+        } catch (IOException e) {
+            log.error("Error initializing GeoIP Database Reader: {}", e.getMessage());
+            throw new RuntimeException("Error initializing GeoIP Database Reader", e);
+        }
     }
     @Transactional
     public void saveClick(Click click) {
