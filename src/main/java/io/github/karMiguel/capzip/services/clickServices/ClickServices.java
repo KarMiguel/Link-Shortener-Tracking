@@ -34,9 +34,9 @@ import java.net.InetAddress;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
+//@RequiredArgsConstructor
 public class ClickServices {
+
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -116,7 +116,7 @@ public class ClickServices {
         String countryName = response.getCountry().getName();
         String postalCode = response.getPostal().getCode();
 
-        return "Client Location: " + cityName + ", " + countryName + " (" + postalCode + ")";
+        return cityName + ", " + countryName + " (" + postalCode + ")";
     }
     public Page<ClickDTO> getClicksByShortLink(String shortLink, Pageable pageable) {
         if (shortLink.endsWith("/")) {
