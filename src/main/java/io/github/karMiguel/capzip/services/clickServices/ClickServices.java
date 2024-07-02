@@ -45,15 +45,20 @@ public class ClickServices {
     private final ResourceLoader resourceLoader;
     private DatabaseReader dbReader;
 
-    @PostConstruct
-    public void initialize() {
-        try {
-            Resource resource = resourceLoader.getResource("classpath:GeoIP2-City.mmdb");
-            File database = resource.getFile();
-            this.dbReader = new DatabaseReader.Builder(database).build();
-        } catch (IOException e) {
-            throw new RuntimeException("Error initializing GeoIP Database Reader", e);
-        }
+    @Autowired
+    public ClickServices(RestTemplate restTemplate,
+                         ObjectMapper objectMapper,
+                         ClickRepository clickRepository,
+                         LinkShortRepository linkShortRepository,
+                         ResourceLoader resourceLoader) throws IOException {
+        this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
+        this.clickRepository = clickRepository;
+        this.linkShortRepository = linkShortRepository;
+        this.resourceLoader = resourceLoader;
+
+        File database = new File("/path/to/GeoIP2-City.mmdb");
+        this.dbReader = new DatabaseReader.Builder(database).build();
     }
 
     @Transactional
