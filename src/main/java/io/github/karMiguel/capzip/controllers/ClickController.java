@@ -67,8 +67,8 @@ public class ClickController {
                 //click.setIp(request.getHeader("X-FORWARDED-FOR"));
                 //click.setIp(clickServices.getIp());
                 click.setIp(request.getRemoteAddr());
-             // click.setLocalization(clickServices.getLocationFromIp(request.getRemoteAddr()));
-                click.setLocalization(clickServices.getClientLocation(request.getRemoteAddr()));
+                click.setLocalization(clickServices.getLocationFromIp(request.getRemoteAddr()));
+                //click.setLocalization(clickServices.getClientLocation(request.getRemoteAddr()));
                 click.setLinkShort(redirect);
                 click.setUserAgent(request.getHeader("User-Agent"));
 

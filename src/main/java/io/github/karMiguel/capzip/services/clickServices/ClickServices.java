@@ -34,7 +34,7 @@ import java.net.InetAddress;
 import java.util.*;
 
 @Service
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class ClickServices {
 
 
@@ -42,21 +42,13 @@ public class ClickServices {
     private final ObjectMapper objectMapper;
     private final ClickRepository clickRepository;
     private final LinkShortRepository linkShortRepository;
-    private final ResourceLoader resourceLoader;
-    private DatabaseReader dbReader;
+   // private final ResourceLoader resourceLoader;
+    private  DatabaseReader dbReader;
 
-    @Autowired
-    public ClickServices(
-            ResourceLoader resourceLoader, RestTemplate restTemplate, ObjectMapper objectMapper, ClickRepository clickRepository, LinkShortRepository linkShortRepository) throws IOException {
-        this.restTemplate = restTemplate;
-        this.objectMapper = objectMapper;
-        this.clickRepository = clickRepository;
-        this.linkShortRepository = linkShortRepository;
-        this.resourceLoader = resourceLoader;
-
+/*    public ClickServices(
         File database = new File("/path/to/GeoIP2-City.mmdb");
         this.dbReader = new DatabaseReader.Builder(database).build();
-    }
+    }*/
 
     @Transactional
     public void saveClick(Click click) {
@@ -93,9 +85,10 @@ public class ClickServices {
             String city = jsonNode.get("city").asText();
             String region = jsonNode.get("region").asText();
             String country = jsonNode.get("country").asText();
+            String postal = jsonNode.get("postal").asText();
 
             if (!city.isEmpty()) {
-                return String.format("%s / %s - %s", city, region, country);
+                return String.format("%s / %s - %s (%s)", city, region, country,postal);
             } else {
                 return "Localização não encontrada.";
             }
