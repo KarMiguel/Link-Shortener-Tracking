@@ -21,6 +21,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,19 +42,20 @@ public class ClickServices {
     private final ObjectMapper objectMapper;
     private final ClickRepository clickRepository;
     private final LinkShortRepository linkShortRepository;
-
-    private  DatabaseReader dbReader;
+    private final ResourceLoader resourceLoader;
+    private DatabaseReader dbReader;
 
     @PostConstruct
     public void initialize() {
         try {
-            File database = new File("/path/to/GeoIP2-City.mmdb");
+            Resource resource = resourceLoader.getResource("classpath:GeoIP2-City.mmdb");
+            File database = resource.getFile();
             this.dbReader = new DatabaseReader.Builder(database).build();
         } catch (IOException e) {
-            log.error("Error initializing GeoIP Database Reader: {}", e.getMessage());
             throw new RuntimeException("Error initializing GeoIP Database Reader", e);
         }
     }
+
     @Transactional
     public void saveClick(Click click) {
         clickRepository.save(click);
