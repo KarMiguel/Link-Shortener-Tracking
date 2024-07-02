@@ -85,8 +85,6 @@ public class ClickController {
         } catch (UnsupportedEncodingException e) {
             log.error("Erro ao decodificar shortLink", e);
             throw new UrlRedirectException("Erro interno do servidor ao decodificar shortLink");
-        } catch (GeoIp2Exception e) {
-            throw new RuntimeException(e);
         }
     }
     //clicks by short link

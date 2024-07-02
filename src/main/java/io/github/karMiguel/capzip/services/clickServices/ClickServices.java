@@ -25,6 +25,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -66,9 +68,10 @@ public class ClickServices {
 
     public String getLocationFromIp(String ip) {
         String url = String.format("https://ipinfo.io/%s/geo", ip);
-        String response = restTemplate.getForObject(url, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 
-        if (response != null) {
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            String response = responseEntity.getBody();
             return parseLocation(response);
         } else {
             return "Localização não encontrada.";
