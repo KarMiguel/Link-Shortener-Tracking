@@ -46,11 +46,8 @@ public class ClickServices {
     private DatabaseReader dbReader;
 
     @Autowired
-    public ClickServices(RestTemplate restTemplate,
-                         ObjectMapper objectMapper,
-                         ClickRepository clickRepository,
-                         LinkShortRepository linkShortRepository,
-                         ResourceLoader resourceLoader) throws IOException {
+    public ClickServices(
+            ResourceLoader resourceLoader, RestTemplate restTemplate, ObjectMapper objectMapper, ClickRepository clickRepository, LinkShortRepository linkShortRepository) throws IOException {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.clickRepository = clickRepository;
