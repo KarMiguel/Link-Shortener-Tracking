@@ -14,8 +14,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
+
   jackson:
     time-zone: America/Sao_Paulo
+  mvc:
+    locale: pt_BR
+    locale-resolver: fixed
+
 
 mail:
   host: smtp.gmail.com
