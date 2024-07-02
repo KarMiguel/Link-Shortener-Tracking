@@ -1,5 +1,6 @@
 package io.github.karMiguel.capzip.controllers;
 
+import com.maxmind.geoip2.exception.GeoIp2Exception;
 import io.github.karMiguel.capzip.dtos.clickDto.ClickDTO;
 import io.github.karMiguel.capzip.dtos.clickDto.ClicksByCityDTO;
 import io.github.karMiguel.capzip.dtos.clickDto.ClicksByPeriodDTO;
@@ -66,7 +67,8 @@ public class ClickController {
                 //click.setIp(request.getHeader("X-FORWARDED-FOR"));
                 //click.setIp(clickServices.getIp());
                 click.setIp(request.getRemoteAddr());
-                click.setLocalization(clickServices.getLocationFromIp(request.getRemoteAddr()));
+             // click.setLocalization(clickServices.getLocationFromIp(request.getRemoteAddr()));
+                click.setLocalization(clickServices.getClientLocation(request.getRemoteAddr()));
                 click.setLinkShort(redirect);
                 click.setUserAgent(request.getHeader("User-Agent"));
 
@@ -83,6 +85,8 @@ public class ClickController {
         } catch (UnsupportedEncodingException e) {
             log.error("Erro ao decodificar shortLink", e);
             throw new UrlRedirectException("Erro interno do servidor ao decodificar shortLink");
+        } catch (GeoIp2Exception e) {
+            throw new RuntimeException(e);
         }
     }
     //clicks by short link

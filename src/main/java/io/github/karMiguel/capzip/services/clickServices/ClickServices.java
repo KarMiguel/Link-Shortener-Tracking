@@ -2,6 +2,9 @@ package io.github.karMiguel.capzip.services.clickServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CityResponse;
 import io.github.karMiguel.capzip.dtos.clickDto.ClickDTO;
 import io.github.karMiguel.capzip.dtos.clickDto.ClicksByCityDTO;
 import io.github.karMiguel.capzip.dtos.clickDto.ClicksByPeriodDTO;
@@ -12,14 +15,19 @@ import io.github.karMiguel.capzip.model.linkShort.LinkShort;
 import io.github.karMiguel.capzip.model.users.Users;
 import io.github.karMiguel.capzip.repository.ClickRepository;
 import io.github.karMiguel.capzip.repository.LinkShortRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.*;
 
 @Service
@@ -27,11 +35,22 @@ import java.util.*;
 @Slf4j
 public class ClickServices {
 
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
-    private final ClickRepository clickRepository;
-    private final LinkShortRepository linkShortRepository;
+    @Autowired
+    private RestTemplate restTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private ClickRepository clickRepository;
+    @Autowired
+    private LinkShortRepository linkShortRepository;
+    @Autowired
+    private  DatabaseReader dbReader;
+
+    public ClickServices() throws IOException {
+        File database = new File("/path/to/GeoIP2-City.mmdb");
+        this.dbReader = new DatabaseReader.Builder(database).build();
+    }
     @Transactional
     public void saveClick(Click click) {
         clickRepository.save(click);
@@ -78,7 +97,17 @@ public class ClickServices {
             return "Erro ao fazer parsing da localização.";
         }
     }
+    public String getClientLocation(String request) throws IOException, GeoIp2Exception {
 
+        InetAddress ipAddress = InetAddress.getByName(request);
+        CityResponse response = dbReader.city(ipAddress);
+
+        String cityName = response.getCity().getName();
+        String countryName = response.getCountry().getName();
+        String postalCode = response.getPostal().getCode();
+
+        return "Client Location: " + cityName + ", " + countryName + " (" + postalCode + ")";
+    }
     public Page<ClickDTO> getClicksByShortLink(String shortLink, Pageable pageable) {
         if (shortLink.endsWith("/")) {
             shortLink = shortLink.substring(0, shortLink.length() - 1);
