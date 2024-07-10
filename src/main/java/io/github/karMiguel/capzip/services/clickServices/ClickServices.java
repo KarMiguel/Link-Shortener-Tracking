@@ -27,6 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,8 +46,7 @@ public class ClickServices {
     private final ObjectMapper objectMapper;
     private final ClickRepository clickRepository;
     private final LinkShortRepository linkShortRepository;
-   // private final ResourceLoader resourceLoader;
-    private  DatabaseReader dbReader;
+
 
 /*    public ClickServices(
         File database = new File("/path/to/GeoIP2-City.mmdb");
@@ -66,13 +67,18 @@ public class ClickServices {
         return clickRepository.countByLinkShort(linkShort);
     }
 
+
+    @Retryable(value = {RuntimeException.class}, maxAttempts = 5, backoff = @Backoff(delay = 2000, multiplier = 2))
     public String getLocationFromIp(String ip) {
         String url = String.format("https://ipinfo.io/%s/geo", ip);
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
-
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            String response = responseEntity.getBody();
+        String response = restTemplate.getForObject(url, String.class);
+        //ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        if (response != null) {
             return parseLocation(response);
+
+        //if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            //String response = responseEntity.getBody();
+            //return parseLocation(response);
         } else {
             return "Localização não encontrada.";
         }
@@ -99,17 +105,6 @@ public class ClickServices {
             e.printStackTrace();
             return "Erro ao fazer parsing da localização.";
         }
-    }
-    public String getClientLocation(String request) throws IOException, GeoIp2Exception {
-
-        InetAddress ipAddress = InetAddress.getByName(request);
-        CityResponse response = dbReader.city(ipAddress);
-
-        String cityName = response.getCity().getName();
-        String countryName = response.getCountry().getName();
-        String postalCode = response.getPostal().getCode();
-
-        return cityName + ", " + countryName + " (" + postalCode + ")";
     }
     public Page<ClickDTO> getClicksByShortLink(String shortLink, Pageable pageable) {
         if (shortLink.endsWith("/")) {
